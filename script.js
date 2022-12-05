@@ -34,40 +34,42 @@ const renderData = function (inputData) {
 };
 
 const renderError = function (error) {
-  artContainer.insertAdjacentText('beforeend',`An error has occured. 🚩🚩🚩... ${error}`
+  artContainer.insertAdjacentText(
+    'beforeend',
+    `An error has occured. 🚩🚩🚩... ${error}`
   );
 };
 
 const getCountryData = function (e) {
   e.preventDefault();
   artContainer.replaceChildren();
-  const [lat, lng] = formInput.value.split(`,`);  
+  const [lat, lng] = formInput.value.split(`,`);
   fetch(
-    `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`)
+    `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`
+  )
     .then((response) => {
-      if(!response.ok){
-        throw new Error(`The entered coordinates do not represent any country - The error code is ${response.status}`)
+      if (!response.ok) {
+        throw new Error(
+          `The entered coordinates do not represent any country - The error code is ${response.status}`
+        );
       }
-      return response.json()
-      })
-    .then(data => {
-      console.log(data)
+      return response.json();
+    })
+    .then((data) => {
+      console.log(data);
       return fetch(`https://restcountries.com/v3.1/alpha/${data.countryCode}`);
     })
-    .then(response => {
-        if(!response.ok){
-        throw new Error(`There is no such country code - The error code is ${response.status}`)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(
+          `There is no such country code - The error code is ${response.status}`
+        );
       }
-      return response.json()
+      return response.json();
     })
-    .then(data => renderData(data))
-    .catch(err => renderError(err))
-    .finally(message => console.log(`The request is processed`));
+    .then((data) => renderData(data))
+    .catch((err) => renderError(err))
+    .finally((message) => console.log(`The request is processed`));
 };
 
 form.addEventListener(`submit`, getCountryData);
-
-  fetch(
-    `https://us1.locationiq.com/v1/reverse?key=pk.077016d2f446620565503cac90f8ae5a&lat=37.870662&lon=144.9803321&format=json`)
-    .then(response => console.log(response))
-      
